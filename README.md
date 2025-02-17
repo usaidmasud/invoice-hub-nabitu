@@ -1,37 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invoice Hub
 
-## Getting Started
+This project is designed as part of a job application process. The application aims to demonstrate proficiency in web development using modern technologies such as **NodeJS 20, Next.js 14, TypeScript, and Material-UI**.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Add Invoice**: Users can create invoice.
+- **Edit Invoice**: Users can edit invoice this page can be access from List **My Invoice**.
+- **Form Validation**: Utilizes React Hook Form and Zod to ensure that user input is valid and adheres to the expected format.
+- **Responsive Design**: The user interface is designed matching by figma file.
+- **Redux Persistence**: User-entered data is stored in local storage, ensuring it is not lost when the page is refreshed.
+- **State Management**: Using Redux Toolkit (RTK) states to enhance user experience during interactions with the application.
+
+## Packages
+
+The following packages are utilized in this project:
+
+- **Material UI**: For UI components and styling.
+- **Zod**: For schema validation.
+- **React Redux Toolkit**: For state management.
+- **Redux Persist**: For persisting Redux state in local storage.
+- **Day.js**: For date manipulation.
+- **React Number Format**: For formatting numbers in input fields.
+
+```json
+{
+  "@emotion/react": "^11.14.0",
+  "@emotion/styled": "^11.14.0",
+  "@hookform/resolvers": "^4.0.0",
+  "@mui/icons-material": "^6.4.4",
+  "@mui/material": "^6.4.4",
+  "@mui/x-date-pickers": "^7.26.0",
+  "@reduxjs/toolkit": "^2.5.1",
+  "dayjs": "^1.11.13",
+  "next": "14.2.24",
+  "react": "^18",
+  "react-dom": "^18",
+  "react-hook-form": "^7.54.2",
+  "react-number-format": "^5.4.3",
+  "react-redux": "^9.2.0",
+  "redux-persist": "^6.0.0",
+  "zod": "^3.24.2"
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Follow these steps to set up the project locally:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Clone the repository** from GitHub:
+  ```bash
+  git clone https://github.com/usaidmasud/invoice-hub-nabitu.git
+  ```
+- **Navigate into the project directory:**
+  ```bash
+  cd invoice-hub-nabitu
+  ```
+- **Install dependencies:**
+  ```bash
+  npm run install
+  ```
+- **Build the project:**
+  ```bash
+  npm run build
+  ```
+- **Start the project:**
+  ```bash
+  npm run start
+  ```
 
-## Learn More
+## Live
 
-To learn more about Next.js, take a look at the following resources:
+The project has been deployed on Vercel with a custom domain. You can access it here:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# invoice-hub-nabitu
+[https://invoicehub.syaripmasud.my.id](https://invoicehub.syaripmasud.my.id)
