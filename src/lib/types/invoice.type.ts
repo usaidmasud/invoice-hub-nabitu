@@ -1,8 +1,7 @@
-import dayjs from "dayjs";
 import { TStatus } from "./status.type";
 
 export interface Invoice {
-  id: number;
+  id: string;
   name: string;
   number: string;
   amount: number;
@@ -17,11 +16,3 @@ export interface RequestInvoice {
   dueDate: string;
   status: TStatus | null;
 }
-
-export const initialInvoice: RequestInvoice = {
-  name: "",
-  number: "",
-  amount: 0,
-  dueDate: dayjs().add(2, "day").toISOString(),
-  status: null,
-};

@@ -10,20 +10,24 @@ import FormSelect from "@/components/FormSelect";
 import PageHeader from "@/components/PageHeader";
 import { initialInvoice } from "@/constants/initialInvoice.constant";
 import { statusConstant } from "@/constants/status.constant";
-import { useAppDispatch } from "@/hooks/redux-hook";
-import { addInvoice } from "@/lib/redux/slice/invoice.slice";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux-hook";
+import { editInvoice } from "@/lib/redux/slice/invoice.slice";
 import { requestInvoiceSchema } from "@/lib/schemas/request-invoice.schema";
 import { RequestInvoice } from "@/lib/types/invoice.type";
 import { TStatus } from "@/lib/types/status.type";
-import { generateId } from "@/utils/generateId";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Add } from "@mui/icons-material";
+import { ChevronLeftOutlined, Save } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-export default function InvoiceAddPage() {
+export default function InvoiceEditPage() {
+  const params = useParams();
+  const { data } = useAppSelector((state) => state.invoice);
+  const router = useRouter();
+
   const dispatch = useAppDispatch();
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const {
@@ -35,24 +39,49 @@ export default function InvoiceAddPage() {
     resolver: zodResolver(requestInvoiceSchema),
     defaultValues: initialInvoice,
   });
+
+  useEffect(() => {
+    const pid = params.id;
+    // find data by id
+    const invoice = data.find((item) => item.id === pid);
+    if (!invoice) {
+      router.replace("/invoices/list");
+    } else {
+      reset(invoice);
+    }
+  }, [data, reset, params, router]);
+
   const onSubmit = (data: RequestInvoice) => {
     setShowAlert(false);
     dispatch(
-      addInvoice({
+      editInvoice({
         ...data,
         status: data.status as TStatus,
-        id: generateId(),
+        id: params.id as string,
       })
     );
     setShowAlert(true);
-    reset(initialInvoice);
     setTimeout(() => {
       setShowAlert(false);
-    }, 5000);
+      router.replace("/invoices/list");
+    }, 2000);
   };
+
   return (
     <Box>
-      <PageHeader title="Add Invoice" />
+      <PageHeader
+        title="Edit Invoice"
+        extra={
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<ChevronLeftOutlined />}
+            onClick={() => router.back()}
+          >
+            Back
+          </Button>
+        }
+      />
       <BoxContainer title="Invoice Form">
         <Grid
           container
@@ -138,6 +167,7 @@ export default function InvoiceAddPage() {
                     onChange={(event) => {
                       let inputValue = event.target.value;
 
+                      // Menambahkan prefix "INV" jika belum ada
                       if (!inputValue.startsWith("INV")) {
                         inputValue = `INV${inputValue.replace(/^INV/, "")}`;
                       }
@@ -177,9 +207,9 @@ export default function InvoiceAddPage() {
             variant="contained"
             sx={{ width: 259 }}
             onClick={handleSubmit(onSubmit)}
-            startIcon={<Add />}
+            startIcon={<Save />}
           >
-            add Invoice
+            update Invoice
           </Button>
         </Box>
       </BoxContainer>
@@ -187,7 +217,7 @@ export default function InvoiceAddPage() {
       {showAlert && (
         <AlertMessage
           color="success"
-          title="Invoice Added successfully"
+          title="Invoice Updated successfully"
           message="You can view and manage your invoice in the `My Invoices` sectoin."
         />
       )}

@@ -1,19 +1,20 @@
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import { ReactNode } from "react";
 interface MenuConstantProps {
   label: string;
   link: string;
-  icon: ReactNode;
+  icon: string;
+  activeIcon: string;
 }
 export const menuConstant: MenuConstantProps[] = [
   {
     label: "Add Invoice",
     link: "/invoices/add",
-    icon: <FormatListBulletedIcon />,
+    icon: "/icon-capital.svg",
+    activeIcon: "/icon-capital-active.svg",
   },
   {
     label: "My Invoice",
     link: "/invoices/list",
-    icon: <FormatListBulletedIcon />,
+    icon: "/icon-list.svg",
+    activeIcon: "/icon-list-active.svg",
   },
 ];

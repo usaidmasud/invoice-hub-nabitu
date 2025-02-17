@@ -8,40 +8,76 @@ import {
   MenuList,
   Typography,
 } from "@mui/material";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ResponsiveTooltip from "../ResponsiveTooltip";
 interface SidebarProps {
   drawerWidth: number;
 }
+
 export default function Sidebar({ drawerWidth }: SidebarProps) {
   const pathname = usePathname();
+  console.log("🚀 ~ Sidebar ~ pathname:", pathname);
   return (
     <Drawer
       sx={{
-        // p: 0,
-        width: drawerWidth,
+        width: {
+          md: 100,
+          xs: 100,
+          sm: 100,
+          lg: drawerWidth,
+        },
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: drawerWidth,
+          width: {
+            md: 100,
+            xs: 100,
+            sm: 100,
+            lg: drawerWidth,
+          },
           boxSizing: "border-box",
           backgroundColor: "#1C2434",
           color: "#fff",
           py: "28px",
-          px: "38px",
+          px: {
+            xs: "16px",
+            sm: "16px",
+            md: "16px",
+            lg: "38px",
+          },
         },
       }}
       variant="permanent"
       anchor="left"
     >
       {/* <Toolbar /> */}
-      <Box
-      // sx={{
-      //   py: "28px",
-      //   px: "38px",
-      // }}
-      >
-        <Image width={166} height={44.57} src={"/logo.png"} alt={"Logo"} />
+      <Box>
+        <Box
+          component="img"
+          src={"/logo-02.svg"}
+          alt={"Logo"}
+          width={166}
+          height={44.57}
+          display={{
+            xs: "none",
+            sm: "none",
+            md: "none",
+            lg: "block",
+          }}
+        />
+        <Box
+          component="img"
+          src={"/logo.svg"}
+          alt={"Logo"}
+          ml={1}
+          display={{
+            xs: "block",
+            sm: "block",
+            md: "block",
+            lg: "none",
+          }}
+        />
+
         <Typography
           sx={{
             mt: "49px",
@@ -67,21 +103,46 @@ export default function Sidebar({ drawerWidth }: SidebarProps) {
                     py: "16px",
                     px: 0,
                     m: 0,
-                    // mb: "32px",
+                    justifyContent: {
+                      xs: "center",
+                      sm: "center",
+                      md: "center",
+                      lg: "flex-start",
+                    },
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      color: pathname === item.link ? "#fff" : "#9D9D9D",
-                    }}
-                  >
-                    {item.icon}
-                  </ListItemIcon>
+                  <ResponsiveTooltip title={item.label} breakpoint="md">
+                    <ListItemIcon
+                      sx={{
+                        color: pathname === item.link ? "#fff" : "#9D9D9D",
+                        minWidth: {
+                          xs: "auto",
+                          sm: "auto",
+                          md: "auto",
+                          lg: "56px",
+                        },
+                      }}
+                    >
+                      <Box
+                        component="img"
+                        src={
+                          pathname === item.link ? item.activeIcon : item.icon
+                        }
+                        alt={item.label}
+                      />
+                    </ListItemIcon>
+                  </ResponsiveTooltip>
                   <ListItemText
                     sx={{
                       fontSize: 16,
                       fontWeight: 600,
                       color: pathname === item.link ? "#fff" : "#9D9D9D",
+                      display: {
+                        xs: "none",
+                        sm: "none",
+                        md: "none",
+                        lg: "block",
+                      },
                     }}
                     primary={item.label}
                   />

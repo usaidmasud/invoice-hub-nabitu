@@ -1,16 +1,20 @@
 "use client";
 
-import FormInput from "@/components/invoices/FormInput";
-import FormSelect from "@/components/invoices/FormSelect";
-import RenderStatus from "@/components/invoices/RenderStatus";
-import { invoicesConstant } from "@/constants/invoices.constant";
+import BoxContainer from "@/components/BoxContainer";
+import ButtonAction from "@/components/ButtonAction";
+import FormInput from "@/components/FormInput";
+import FormSelect from "@/components/FormSelect";
+import RenderStatus from "@/components/RenderStatus";
+import PageHeader from "@/components/PageHeader";
 import { statusConstant } from "@/constants/status.constant";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux-hook";
+import { removeInvoice } from "@/lib/redux/slice/invoice.slice";
+import { Invoice } from "@/lib/types/invoice.type";
 import { debounceTwo } from "@/utils/debounce";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { Menu, Search } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 import {
   Box,
-  IconButton,
   InputAdornment,
   Table,
   TableBody,
@@ -25,6 +29,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 export default function InvoiceListPage() {
+  const { data } = useAppSelector((state) => state.invoice);
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams(); // Hook to access search params
@@ -39,7 +45,7 @@ export default function InvoiceListPage() {
     const searchTerm = searchParams.get("search") || "";
     const statusFilter = status;
 
-    return invoicesConstant.filter((invoice) => {
+    return data.filter((invoice: Invoice) => {
       const matchesSearch =
         invoice.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         invoice.number.toLowerCase().includes(searchTerm.toLowerCase());
@@ -48,7 +54,7 @@ export default function InvoiceListPage() {
 
       return matchesSearch && matchesStatus;
     });
-  }, [searchParams, status]);
+  }, [searchParams, status, data]);
 
   const handleSearch = (value: string) => {
     setSearch(value);
@@ -77,70 +83,75 @@ export default function InvoiceListPage() {
     }
     router.push(`${pathname}?${params.toString()}`);
   };
+
+  const handleDelete = (index: number) => {
+    dispatch(removeInvoice(index));
+  };
   return (
     <Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <Typography
-          sx={{
-            fontSize: 26,
-            fontWeight: 700,
-            mb: "38px",
-          }}
-        >
-          My Invoices
-        </Typography>
-        <Box>
-          <FormInput
+      <PageHeader
+        title="My Invoices"
+        extra={
+          <Box
             sx={{
-              width: 216,
-            }}
-            size="small"
-            placeholder="Search"
-            value={search}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
+              display: "flex",
+              flexDirection: {
+                xs: "column",
+                sm: "column",
+                md: "row",
               },
+              gap: "25px",
             }}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
-          <FormSelect
-            emptyText="All Status"
-            options={[
-              {
-                label: "All Status",
-                value: "",
-              },
-              ...statusConstant,
-            ]}
-            sx={{
-              width: 135,
-              ml: 3,
-            }}
-            size="small"
-            value={status}
-            onChange={(e) => {
-              const value = e?.target?.value || "";
-              handleStatusChange(value as string);
-            }}
-          />
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          backgroundColor: "#fff",
-          p: "30px",
-        }}
-      >
+          >
+            <FormInput
+              sx={{
+                width: 216,
+                borderRadius: "10px",
+                bgcolor: "#fff",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "10px", // Atur border-radius di sini
+                },
+              }}
+              size="small"
+              placeholder="Search"
+              value={search}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+            <FormSelect
+              emptyText="All Status"
+              options={[
+                {
+                  label: "All Status",
+                  value: "",
+                },
+                ...statusConstant,
+              ]}
+              sx={{
+                width: 135,
+                bgcolor: "#fff",
+                borderRadius: "10px",
+              }}
+              size="small"
+              value={status}
+              onChange={(e) => {
+                const value = e?.target?.value || "";
+                handleStatusChange(value as string);
+              }}
+            />
+          </Box>
+        }
+      />
+
+      <BoxContainer>
         <TableContainer>
           <Table size="medium" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead
@@ -157,7 +168,7 @@ export default function InvoiceListPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredData.map((row) => (
+              {filteredData.map((row: Invoice, index) => (
                 <TableRow
                   key={row.name}
                   sx={{
@@ -193,16 +204,17 @@ export default function InvoiceListPage() {
                   </TableCell>
                   <TableCell>{formatCurrency(row.amount)}</TableCell>
                   <TableCell>
-                    <IconButton>
-                      <Menu />
-                    </IconButton>
+                    <ButtonAction
+                      onEdit={() => router.push(`/invoices/${row.id}/edit`)}
+                      onDelete={() => handleDelete(index)}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
+      </BoxContainer>
     </Box>
   );
 }

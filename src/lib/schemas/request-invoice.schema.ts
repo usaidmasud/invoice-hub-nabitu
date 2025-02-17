@@ -9,7 +9,8 @@ export const requestInvoiceSchema = z.object({
       required_error: "Amount is required",
       invalid_type_error: "Amount must be a number",
     })
-    .min(0, { message: "Amount must be at least 0" }),
+    .min(0, { message: "Amount must be at least 0" })
+    .refine((value) => value !== 0, { message: "Amount cannot be zero" }),
   dueDate: z.string().min(1, { message: "Due Date is required" }),
   status: z
     .custom<TStatus>()

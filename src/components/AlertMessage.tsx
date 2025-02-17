@@ -44,6 +44,7 @@ export default function AlertMessage({
         gap: 2,
         position: "relative",
         p: "27px",
+        mt: "38px",
         borderRadius: "8px",
         overflow: "hidden",
         backgroundColor,
